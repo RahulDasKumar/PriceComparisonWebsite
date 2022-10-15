@@ -1,0 +1,34 @@
+package com.example.demo;
+
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
+
+@Configuration
+public class ItemConfig {
+    /*SELECT
+    price
+FROM
+    product_info
+WHERE
+    product_name = "apple";*/
+  ///  @Query(value = "SELECT price FROM product_info WHERE product_name ="+"apple",nativeQuery = true)
+
+
+    @Bean
+    CommandLineRunner commandLineRunner(ItemRepository itemRepository){
+        return args -> {
+               Item banana = new Item("banana",itemRepository.findPriceByName("banana").getPrice() ,itemRepository.findStoreByName("banana").getSources());
+               //banana.setPrice(banana.findCheapestItem(banana.getName()));
+                Item apple = new Item("apple",itemRepository.findPriceByName("apple").getPrice(),itemRepository.findStoreByName("apple").getSources());
+                Item grapes = new Item("grapes",itemRepository.findPriceByName("grapes").getPrice(),itemRepository.findStoreByName("grapes").getSources());
+                Item watermelon = new Item("watermelon",itemRepository.findPriceByName("watermelon").getPrice(),itemRepository.findStoreByName("watermelon").getSources());
+
+
+            itemRepository.saveAll(List.of(apple,banana,grapes,watermelon));
+        };
+    }
+}
