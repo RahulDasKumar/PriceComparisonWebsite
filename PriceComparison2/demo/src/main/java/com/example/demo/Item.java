@@ -38,8 +38,12 @@ public class Item {
     private String sources;
 
 
+
+    @Column(name = "url")
+    private String link;
   //  @Value("${api.key}")
-    private String apiKey = "02fc4b553614e0b1815f17a2258e88dae88b797d14a7ba778238a25aee438764";
+
+     String apiKey = "02fc4b553614e0b1815f17a2258e88dae88b797d14a7ba778238a25aee438764";
     public Item() {
     }
 
@@ -77,7 +81,14 @@ public class Item {
     public void setSources(String sources) {
         this.sources = sources;
     }
-    @Scheduled(cron = "CRON EXPRESSION")
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
     public double findCheapestItem(String item) throws IOException, InterruptedException, URISyntaxException {
 // Building request
         HttpRequest getRequestofItem = HttpRequest.newBuilder()
@@ -92,18 +103,22 @@ public class Item {
         JsonArray documents = (JsonArray) rootObj.get("shopping_results");
         ArrayList<Double> itemList = new ArrayList<Double>();
         ArrayList<String> storeList = new ArrayList<String>();
+        ArrayList<String> urlList  = new ArrayList<String>();
         //Finding cheapest price
         Iterator<JsonElement> itr = documents.iterator();
         while (itr.hasNext()) {
             JsonObject jsonObject = (JsonObject) itr.next();
             JsonElement price = jsonObject.get("extracted_price");
             JsonElement store = jsonObject.get("source");
+            JsonElement url = jsonObject.get("link");
             double bananaPrice = price.getAsDouble();
             String sourceName = store.getAsString();
+            String urlName = url.getAsString();
             itemList.add(bananaPrice);
             storeList.add(sourceName);
-
+            urlList.add(urlName);
         }
+        setLink(urlList.get(Algorithms.indexOfSmallest(itemList)));
         setSources(storeList.get(Algorithms.indexOfSmallest(itemList)));
        return itemList.get(Algorithms.indexOfSmallest(itemList));
        // setSources(storeList.get(Algorithms.indexOfSmallest(itemList)));
