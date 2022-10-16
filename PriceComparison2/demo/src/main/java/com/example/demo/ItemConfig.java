@@ -9,23 +9,18 @@ import java.util.List;
 
 @Configuration
 public class ItemConfig {
-    /*SELECT
-    price
-FROM
-    product_info
-WHERE
-    product_name = "apple";*/
-  ///  @Query(value = "SELECT price FROM product_info WHERE product_name ="+"apple",nativeQuery = true)
-
-
+    
     @Bean
     CommandLineRunner commandLineRunner(ItemRepository itemRepository){
         return args -> {
                Item banana = new Item("banana",itemRepository.findPriceByName("banana").getPrice() ,itemRepository.findStoreByName("banana").getSources());
-               //banana.setPrice(banana.findCheapestItem(banana.getName()));
-                Item apple = new Item("apple",itemRepository.findPriceByName("apple").getPrice(),itemRepository.findStoreByName("apple").getSources());
+               banana.setPrice(banana.findCheapestItem(banana.getName()));
+                Item apple = new Item("apple-fruit",itemRepository.findPriceByName("apple-fruit").getPrice(),itemRepository.findStoreByName("apple-fruit").getSources());
+                apple.setPrice(apple.findCheapestItem(apple.getName()));
                 Item grapes = new Item("grapes",itemRepository.findPriceByName("grapes").getPrice(),itemRepository.findStoreByName("grapes").getSources());
+                grapes.setPrice(grapes.findCheapestItem(grapes.getName()));
                 Item watermelon = new Item("watermelon",itemRepository.findPriceByName("watermelon").getPrice(),itemRepository.findStoreByName("watermelon").getSources());
+                watermelon.setPrice(watermelon.findCheapestItem(watermelon.getName()));
 
 
             itemRepository.saveAll(List.of(apple,banana,grapes,watermelon));
